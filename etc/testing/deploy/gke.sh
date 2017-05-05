@@ -23,12 +23,10 @@ new_opt="$( getopt --long="create,delete:,delete-all" -- ${0} "${@}" )"
 [[ "$?" -eq 0 ]] || exit 1
 eval "set -- ${new_opt}"
 
-printenv GKE_SERVICE_ACCOUNT_KEY >gke_key.json
-if [[ "$(wc -c gke_key.json)" -gt 0 ]]; then
-  # travis-test-bot@travis-batch-test.iam.gserviceaccount.com
-  gcloud auth activate-service-account --key-file=gke_key.json
-  gcloud config set account "$(jq '.client_email' gke_key.json)"
-fi
+KEY_FILE="$(dirname ${0})/../pach-travis-86b9f180aa16.json"
+set -x
+gcloud auth activate-service-account --key-file=${KEY_FILE}
+set +x
 
 case "${1}" in
   --delete-all)
