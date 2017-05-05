@@ -27,6 +27,7 @@ printenv GKE_SERVICE_ACCOUNT_KEY >gke_key.json
 if [[ "$(wc -c gke_key.json)" -gt 0 ]]; then
   # travis-test-bot@travis-batch-test.iam.gserviceaccount.com
   gcloud auth activate-service-account --key-file=gke_key.json
+  gcloud config set account "$(jq '.client_email' gke_key.json)"
 fi
 
 case "${1}" in

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-if [[ "$TRAVIS_EVENT_TYPE" != "cron" ]]; then
+#if [[ "$TRAVIS_EVENT_TYPE" != "cron" ]]; then
+if [[ "cron" != "cron" ]]; then
   exit 0
 fi
 
@@ -27,4 +28,4 @@ mv google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil
 sudo bash -Ec 'echo $PATH'
 sudo ln -s `which aws` /usr/local/bin/aws
 sudo ln -s `which go` /usr/local/bin/go
-sudo apt-get install uuid
+sudo apt-get install -yq uuid
