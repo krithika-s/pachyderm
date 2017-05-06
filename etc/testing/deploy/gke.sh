@@ -10,6 +10,7 @@ if [[ "$#" -lt 1 ]]; then
   exit 1
 fi
 
+PROJECT="pach-travis"
 MACHINE_TYPE="n1-standard-4"
 GCP_ZONE="us-west1-a"
 NUM_NODES=3
@@ -26,6 +27,7 @@ eval "set -- ${new_opt}"
 KEY_FILE="$(dirname ${0})/../pach-travis-86b9f180aa16.json"
 set -x
 gcloud auth activate-service-account --key-file=${KEY_FILE}
+gcloud config set project "${PROJECT}"
 set +x
 
 case "${1}" in
