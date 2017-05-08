@@ -165,7 +165,7 @@ launch-bench:
 	ID=$$( etc/testing/deploy/$(BENCH_CLOUD_PROVIDER).sh --create ); \
 	until timeout 10s ./etc/kube/check_ready.sh app=pachd; do sleep 1; done; \
 	cat ~/.kube/config; \
-	etc/testing/deploy/$(BENCH_CLOUD_PROVIDER).sh --delete=$${ID}
+	echo $${ID}; \
 
 install-bench: install
 	@# Since bench is run as sudo, pachctl needs to be under
@@ -179,13 +179,14 @@ run-bench:
 	kubectl delete --ignore-not-found po/bench && kubectl run bench --image=pachyderm/bench:`git rev-list HEAD --max-count=1` --image-pull-policy=Always --restart=Never --attach=true -- ./test -test.v -test.bench=BenchmarkDaily -test.run=XXX
 
 clean-launch-bench:
-	if [ -e tmp/current-benchmark-cluster.txt ]; then \
-	  { \
-	    kops delete cluster `cat tmp/current-benchmark-cluster.txt` --yes --state `cat tmp/current-benchmark-state-store.txt`; \
-	    aws s3 del --recursive --force `cat tmp/current-benchmark-state-store.txt`; \
-	    aws s3 rb `cat tmp/current-benchmark-state-store.txt`; \
-	  } || true; \
-	fi
+	etc/testing/deploy/$(BENCH_CLOUD_PROVIDER).sh --delete-all
+	# if [ -e tmp/current-benchmark-cluster.txt ]; then \
+	#   { \
+	#     kops delete cluster `cat tmp/current-benchmark-cluster.txt` --yes --state `cat tmp/current-benchmark-state-store.txt`; \
+	#     aws s3 del --recursive --force `cat tmp/current-benchmark-state-store.txt`; \
+	#     aws s3 rb `cat tmp/current-benchmark-state-store.txt`; \
+	#   } || true; \
+	# fi
 
 bench: clean-launch-bench build-bench-images push-bench-images launch-bench run-bench clean-launch-bench
 

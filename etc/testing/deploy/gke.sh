@@ -44,6 +44,14 @@ case "${1}" in
             echo "Y" | gcloud compute disks delete ${STORAGE_NAME}
             gsutil rb gs://${BUCKET_NAME}
         done
+    gcloud compute disks list | grep ${PREFIX} | awk '{print $1}' \
+      | while read d; do
+          echo "y" | gcloud compute disks delete ${d}
+        done
+    gsutil ls | grep ${PREFIX} \
+      | while read b; do
+          gsutil rb ${b};
+        done
     set +x
     ;;
   --delete)
