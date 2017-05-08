@@ -165,6 +165,7 @@ launch-bench:
 	ID=$$( etc/testing/deploy/$(BENCH_CLOUD_PROVIDER).sh --create ); \
 	until timeout 10s ./etc/kube/check_ready.sh app=pachd; do sleep 1; done; \
 	cat ~/.kube/config; \
+	echo etc/testing/deploy$(BENCH_CLOUD_PROVIDER).sh --delete=$${ID}
 	echo $${ID}; \
 
 install-bench: install
