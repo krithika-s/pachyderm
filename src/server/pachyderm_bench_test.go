@@ -7,7 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"math/rand"
-	"os"
+	// "os"
 	"path"
 	"sync/atomic"
 	"testing"
@@ -39,7 +39,9 @@ func (w *countWriter) Write(p []byte) (int, error) {
 }
 
 func getRand() *rand.Rand {
-	return rand.New(rand.NewSource(time.Now().Unix()))
+	seed := time.Now().Unix()
+	fmt.Println("Producing rand.Rand with seed: ", seed)
+	return rand.New(rand.NewSource(seed))
 }
 
 func BenchmarkDailySmallFiles(b *testing.B) {
@@ -61,12 +63,14 @@ func BenchmarkLocalBigFiles(b *testing.B) {
 // getClient returns a Pachyderm client that connects to either a
 // local cluster or a remote one, depending on the LOCAL env variable.
 func getClient() (*client.APIClient, error) {
-	if os.Getenv("LOCAL") != "" {
-		c, err := client.NewFromAddress("localhost:30650")
-		return c, err
-	}
-	c, err := client.NewInCluster()
+	c, err := client.NewFromAddress("localhost:30650")
 	return c, err
+	// if os.Getenv("LOCAL") != "" {
+	// 	c, err := client.NewFromAddress("localhost:30650")
+	// 	return c, err
+	// }
+	// c, err := client.NewInCluster()
+	// return c, err
 }
 
 // benchmarkFiles runs a benchmarks that uploads, downloads, and processes
