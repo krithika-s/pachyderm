@@ -165,7 +165,7 @@ launch-bench:
 	ID=$$( etc/testing/deploy/$(BENCH_CLOUD_PROVIDER).sh --create ); \
 	until timeout 10s ./etc/kube/check_ready.sh app=pachd; do sleep 1; done; \
 	cat ~/.kube/config; \
-	etc/testing/deploy$(BENCH_CLOUD_PROVIDER).sh --delete=$${ID}
+	etc/testing/deploy/$(BENCH_CLOUD_PROVIDER).sh --delete=$${ID}
 
 install-bench: install
 	@# Since bench is run as sudo, pachctl needs to be under
