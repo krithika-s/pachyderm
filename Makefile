@@ -162,7 +162,7 @@ push-bench-images: install-bench
 launch-bench:
 	# Make launches each process in its own shell process, so we have to structure
 	# these to run these as one command
-	ID=$$( etc/testing/deploy/$(BENCH_CLOUD_PROVIDER).sh --create ); \
+	ID=$$( etc/testing/deploy/$(BENCH_CLOUD_PROVIDER).sh --create | tail -n 1); \
 	until timeout 10s ./etc/kube/check_ready.sh app=pachd; do sleep 1; done; \
 	cat ~/.kube/config; \
 	echo etc/testing/deploy$(BENCH_CLOUD_PROVIDER).sh --delete=$${ID}
